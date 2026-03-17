@@ -1,0 +1,34 @@
+# --- Environment & app secrets ---
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.template
+!**/.env.sample
+
+# --- Streamlit secrets ---
+**/.streamlit/secrets.toml
+**/secrets.toml
+
+# --- API keys / credentials files ---
+**/*credentials*.json
+**/*secret*.json
+**/*apikey*.json
+**/*token*.json
+
+# --- Private keys & certificates ---
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.crt
+
+# --- Local databases / dumps (often sensitive) ---
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.sql
+**/*.dump
+
+# --- Python cache artifacts ---
+**/__pycache__/
+**/*.py[cod]
