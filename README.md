@@ -71,6 +71,40 @@ flowchart LR
 4. The agent inspects the schema, generates SQL, executes read-only database tools, and streams events back to the UI.
 5. The frontend shows the final answer together with intermediate tool activity.
 
+## CI/CD Deployment Flow (Frontend And Backend)
+
+The current delivery flow is container-first:
+
+- build image locally (or in CI)
+- push to Artifact Registry
+- update Cloud Run service to new image
+- inject runtime secrets from Secret Manager
+- route traffic to the new revision
+
+### Frontend Pipeline Flow
+
+```mermaid
+flowchart LR
+    CodeFrontend[Frontend code and Dockerfile] --> BuildFrontend[Build frontend container image]
+    BuildFrontend --> PushFrontend[Push image to Artifact Registry]
+    PushFrontend --> DeployFrontend[Deploy Cloud Run frontend revision]
+    SecretFrontend[Secret Manager frontend secrets] --> InjectFrontend["Inject BACKEND_BASE_URL and mount .streamlit/secrets.toml"]
+    InjectFrontend --> DeployFrontend
+    DeployFrontend --> LiveFrontend[Frontend URL serves new revision]
+```
+
+### Backend Pipeline Flow
+
+```mermaid
+flowchart LR
+    CodeBackend[Backend code and Dockerfile] --> BuildBackend[Build backend container image]
+    BuildBackend --> PushBackend[Push image to Artifact Registry]
+    PushBackend --> DeployBackend[Deploy Cloud Run backend revision]
+    SecretBackend[Secret Manager backend secrets] --> InjectBackend[Inject env vars for model auth and policy]
+    InjectBackend --> DeployBackend
+    DeployBackend --> LiveBackend[Backend URL serves new revision]
+```
+
 ## Architecture Cheat Sheet
 
 ### Frontend
