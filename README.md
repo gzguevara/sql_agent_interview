@@ -81,29 +81,23 @@ The current delivery flow is container-first:
 - inject runtime secrets from Secret Manager
 - route traffic to the new revision
 
-### Frontend Pipeline Flow
+### Generic Pipeline Flow
 
 ```mermaid
 flowchart LR
-    CodeFrontend[Frontend code and Dockerfile] --> BuildFrontend[Build frontend container image]
-    BuildFrontend --> PushFrontend[Push image to Artifact Registry]
-    PushFrontend --> DeployFrontend[Deploy Cloud Run frontend revision]
-    SecretFrontend[Secret Manager frontend secrets] --> InjectFrontend["Inject BACKEND_BASE_URL and mount .streamlit/secrets.toml"]
-    InjectFrontend --> DeployFrontend
-    DeployFrontend --> LiveFrontend[Frontend URL serves new revision]
+    SourceCode[Service code and Dockerfile] --> BuildImage[Build container image]
+    BuildImage --> PushImage[Push image to Artifact Registry]
+    PushImage --> DeployRevision[Deploy new Cloud Run revision]
+    SecretManager[Secret Manager values] --> InjectSecrets[Inject runtime secrets]
+    InjectSecrets --> DeployRevision
+    DeployRevision --> ServiceURL[Service URL serves new revision]
 ```
 
-### Backend Pipeline Flow
+Notes:
 
-```mermaid
-flowchart LR
-    CodeBackend[Backend code and Dockerfile] --> BuildBackend[Build backend container image]
-    BuildBackend --> PushBackend[Push image to Artifact Registry]
-    PushBackend --> DeployBackend[Deploy Cloud Run backend revision]
-    SecretBackend[Secret Manager backend secrets] --> InjectBackend[Inject env vars for model auth and policy]
-    InjectBackend --> DeployBackend
-    DeployBackend --> LiveBackend[Backend URL serves new revision]
-```
+- The same pipeline applies to both frontend and backend services.
+- Backend secrets are injected mainly as environment variables.
+- Frontend uses a hybrid pattern: environment variables plus mounted `.streamlit/secrets.toml`.
 
 ## Architecture Cheat Sheet
 
