@@ -1,0 +1,10 @@
+project_id              = "gzguevara"
+region                  = "europe-west10"
+environment             = "dev"
+frontend_service_name   = "sql-agent-frontend"
+backend_service_name    = "sql-agent-backend"
+artifact_repository_id  = "sql-agent-images"
+
+# Replace these when you have real built images.
+placeholder_frontend_image = "us-docker.pkg.dev/cloudrun/container/hello"
+placeholder_backend_image  = "us-docker.pkg.dev/cloudrun/container/hello"
